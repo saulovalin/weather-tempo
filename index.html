@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="drizzle.png" type="image/x-icon">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Coloque o nome da cidade" spellcheck="false">
+            <button><img src="search.png"></button>
+        </div>
+        <div class="error">
+            <p>cidade não encontrada</p>
+        </div>
+        <div class="weather">
+            <img src="rain.png" class="weather-icon">
+            <h1 class="temp">23°c</h1>
+            <h2 class="city">Bangalore</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="humidity.png" >
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidade</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="wind.png" >
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p>Velocidade do vento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+        const apikey = "037915499dc687b5b69f098dd91193d7";
+        const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+
+        async function checkweather(city){
+            const response = await fetch(apiurl + city +`&appid=${apikey}`);
+            if(response.status == 404){
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+            }else{
+                var data = await response.json();
+
+        
+
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp)  + "°c";
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.src = "clouds.png";
+
+
+            }
+            else if(data.weather[0].main == "clear"){
+                weatherIcon.src = "clear.png";
+            }
+            else if(data.weather[0].main == "Rain"){
+                weatherIcon.src = "rain.png";
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.src = "drizzle.png";
+            }
+            else if(data.weather[0].main == "mist"){
+                weatherIcon.src = "mist.png";
+            }
+            document.querySelector(".weather").style.display = "block";
+            document.querySelector(".error").style.display = "none";
+
+
+            }
+            
+
+
+        }
+        searchBtn.addEventListener("click",()=>{
+            checkweather(searchBox.value);
+
+        })
+
+      
+    </script>
+
+<footer id="footer" class="footer white-bg">
+    <p><a rel="nofollow" target="_blank" href="https://valindeveloper.netlify.app/#/">Feito por Saulo Valin <span class="crown">&#9813;</span></a></p>
+  </footer>
+
+
+
+</body>
+</html>
